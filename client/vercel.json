@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build:prod",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  }
+} 
