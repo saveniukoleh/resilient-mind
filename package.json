@@ -2,7 +2,6 @@
   "name": "resilient-mind",
   "version": "1.0.0",
   "private": true,
-  "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite --mode development",
     "dev:staging": "vite --mode staging",
@@ -17,20 +16,11 @@
     "test": "vitest",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "type-check": "vue-tsc --noEmit",
-    "electron:dev": "tsc electron/main.ts && electron .",
-    "electron:build": "tsc electron/main.ts && electron-builder",
-    "mobile:sync": "npx cap sync",
-    "mobile:open:android": "npx cap open android",
-    "mobile:open:ios": "npx cap open ios",
     "functions:serve": "cd functions && npm run serve",
     "functions:deploy": "cd functions && npm run deploy",
     "functions:build": "cd functions && npm run build"
   },
   "dependencies": {
-    "@capacitor/android": "^7.1.0",
-    "@capacitor/cli": "^7.1.0",
-    "@capacitor/core": "^7.1.0",
-    "@capacitor/ios": "^7.1.0",
     "@vueuse/core": "^10.7.2",
     "@zoom/meetingsdk": "^3.12.0",
     "axios": "^1.6.7",
@@ -44,7 +34,6 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
-    "@types/electron": "^1.4.38",
     "@types/node": "^20.11.16",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
@@ -53,8 +42,6 @@
     "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/test-utils": "^2.4.4",
     "autoprefixer": "^10.4.17",
-    "electron": "^35.1.0",
-    "electron-builder": "^25.1.8",
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.21.1",
     "prettier": "^3.2.5",

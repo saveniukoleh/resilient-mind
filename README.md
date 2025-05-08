@@ -79,47 +79,6 @@ A mental health support application designed to provide assistance for war-affec
    firebase deploy --only hosting
    ```
 
-## 📱 Mobile Development
-
-### Android
-
-1. Sync Capacitor:
-
-   ```bash
-   npm run mobile:sync
-   ```
-
-2. Open Android Studio:
-   ```bash
-   npm run mobile:open:android
-   ```
-
-### iOS
-
-1. Sync Capacitor:
-
-   ```bash
-   npm run mobile:sync
-   ```
-
-2. Open Xcode:
-   ```bash
-   npm run mobile:open:ios
-   ```
-
-## 🖥️ Desktop Development
-
-1. Start Electron development:
-
-   ```bash
-   npm run electron:dev
-   ```
-
-2. Build desktop application:
-   ```bash
-   npm run electron:build
-   ```
-
 ## 🏗️ Project Structure
 
 ```
@@ -143,10 +102,6 @@ resilient-mind/
 │   ├── package.json    # Functions dependencies
 │   └── tsconfig.json  # TypeScript configuration
 │
-├── android/                # Android app files
-├── ios/                   # iOS app files
-├── electron/             # Desktop app files
-│
 ├── docs/                   # Documentation
 │   ├── CONTEXT.md         # Project context and overview
 │   ├── DEVELOPMENT_PLAN.md # Development roadmap
@@ -161,8 +116,6 @@ resilient-mind/
 - **Authentication**: Firebase Authentication
 - **Storage**: Firebase Storage
 - **Hosting**: Firebase Hosting
-- **Mobile**: Capacitor
-- **Desktop**: Electron
 
 ## 📚 Documentation
 
