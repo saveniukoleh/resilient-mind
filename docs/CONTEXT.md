@@ -54,16 +54,14 @@ Resilient Mind is a dedicated mental health support application designed to prov
 
 - Vue.js
 - TailwindCSS
+- Vite
 
 ### Backend
 
-- Node.js
-- Express
-
-### Database & Authentication
-
-- Firebase
-- Firebase Auth
+- Firebase Cloud Functions
+- Firebase Authentication
+- Firebase Firestore
+- Firebase Storage
 
 ### API Integrations
 
@@ -73,240 +71,181 @@ Resilient Mind is a dedicated mental health support application designed to prov
 
 ### Hosting
 
-- Vercel
-
-## Database Schema
-
-### Users Collection
-
-```typescript
-interface User {
-  id: string;
-  email: string;
-  displayName: string;
-  phoneNumber?: string;
-  profilePicture?: string;
-  language: string;
-  createdAt: timestamp;
-  lastLogin: timestamp;
-  isActive: boolean;
-  role: "user" | "therapist" | "admin";
-  emergencyContact?: {
-    name: string;
-    phone: string;
-    relationship: string;
-  };
-  preferences: {
-    notifications: boolean;
-    darkMode: boolean;
-    language: string;
-  };
-}
-```
-
-### Therapists Collection
-
-```typescript
-interface Therapist {
-  id: string;
-  userId: string; // Reference to Users collection
-  specialization: string[];
-  credentials: {
-    license: string;
-    education: string[];
-    certifications: string[];
-  };
-  availability: {
-    timezone: string;
-    schedule: {
-      day: string;
-      startTime: string;
-      endTime: string;
-    }[];
-  };
-  rating: number;
-  totalSessions: number;
-  bio: string;
-  languages: string[];
-  hourlyRate: number;
-  isAvailable: boolean;
-}
-```
-
-### Sessions Collection
-
-```typescript
-interface Session {
-  id: string;
-  therapistId: string; // Reference to Therapists collection
-  userId: string; // Reference to Users collection
-  date: timestamp;
-  duration: number; // in minutes
-  status: "scheduled" | "completed" | "cancelled";
-  type: "video" | "chat" | "in-person";
-  notes?: string;
-  payment: {
-    amount: number;
-    status: "pending" | "completed" | "refunded";
-    transactionId?: string;
-  };
-}
-```
-
-### Chat Messages Collection
-
-```typescript
-interface ChatMessage {
-  id: string;
-  sessionId: string; // Reference to Sessions collection
-  senderId: string; // Reference to Users collection
-  content: string;
-  timestamp: timestamp;
-  type: "text" | "image" | "file";
-  isRead: boolean;
-  metadata?: {
-    fileUrl?: string;
-    fileType?: string;
-    fileSize?: number;
-  };
-}
-```
-
-### Recovery Programs Collection
-
-```typescript
-interface RecoveryProgram {
-  id: string;
-  title: string;
-  description: string;
-  modules: {
-    id: string;
-    title: string;
-    content: string;
-    duration: number;
-    order: number;
-    type: "video" | "text" | "exercise";
-  }[];
-  difficulty: "beginner" | "intermediate" | "advanced";
-  category: string[];
-  prerequisites?: string[];
-  totalDuration: number;
-  isActive: boolean;
-}
-```
-
-### User Progress Collection
-
-```typescript
-interface UserProgress {
-  id: string;
-  userId: string; // Reference to Users collection
-  programId: string; // Reference to Recovery Programs collection
-  moduleId: string;
-  status: "not_started" | "in_progress" | "completed";
-  progress: number; // percentage
-  lastAccessed: timestamp;
-  completedAt?: timestamp;
-  notes?: string;
-  mood?: {
-    rating: number;
-    timestamp: timestamp;
-    notes?: string;
-  }[];
-}
-```
-
-### Community Posts Collection
-
-```typescript
-interface CommunityPost {
-  id: string;
-  userId: string; // Reference to Users collection
-  title: string;
-  content: string;
-  category: string;
-  tags: string[];
-  createdAt: timestamp;
-  updatedAt: timestamp;
-  likes: number;
-  comments: number;
-  status: "active" | "archived" | "reported";
-  isAnonymous: boolean;
-  moderationStatus: "pending" | "approved" | "rejected";
-}
-```
+- Firebase Hosting
+- Vercel (Optional)
 
 ## Project Structure
 
 ```
 resilient-mind/
-├── client/                      # Frontend Vue.js application
-│   ├── public/                  # Static files
-│   │   ├── assets/             # Images, fonts, etc.
-│   │   │   ├── common/         # Shared components
-│   │   │   ├── chat/          # Chat-related components
-│   │   │   ├── therapy/       # Therapy-related components
-│   │   │   └── community/     # Community-related components
-│   │   ├── views/             # Page components
-│   │   ├── router/            # Vue Router configuration
-│   │   ├── store/             # Vuex store modules
-│   │   ├── services/          # API services
-│   │   ├── utils/             # Helper functions
-│   │   ├── styles/            # Global styles
-│   │   ├── App.vue
-│   │   └── main.js
-│   ├── tests/                 # Frontend tests
-│   └── package.json
+├── src/                      # Vue.js application source
+│   ├── components/          # Reusable Vue components
+│   ├── views/              # Page components
+│   ├── router/            # Vue Router configuration
+│   ├── stores/           # Pinia store modules
+│   ├── services/        # API and service integrations
+│   ├── styles/         # Global styles and TailwindCSS
+│   ├── types/         # TypeScript type definitions
+│   ├── config/       # Application configuration
+│   ├── App.vue      # Root component
+│   └── main.ts     # Application entry point
 │
-├── server/                     # Backend Node.js application
-│   ├── src/
-│   │   ├── config/            # Configuration files
-│   │   ├── controllers/       # Route controllers
-│   │   ├── middleware/        # Custom middleware
-│   │   ├── models/            # Data models
-│   │   ├── routes/            # API routes
-│   │   ├── services/          # Business logic
-│   │   ├── utils/             # Helper functions
-│   │   └── app.js             # Express app setup
-│   ├── tests/                 # Backend tests
-│   └── package.json
+├── functions/              # Firebase Cloud Functions
+│   ├── src/              # Functions source code
+│   │   ├── functions/   # Function implementations
+│   │   └── index.ts    # Functions entry point
+│   ├── package.json    # Functions dependencies
+│   └── tsconfig.json  # TypeScript configuration
 │
-├── shared/                     # Shared code between frontend and backend
-│   ├── constants/
-│   ├── types/
-│   └── utils/
+├── android/                # Android app files
+├── ios/                   # iOS app files
+├── electron/             # Desktop app files
 │
-├── docs/                       # Documentation
-│   ├── api/
-│   ├── deployment/
-│   └── development/
+├── docs/                   # Documentation
+│   ├── CONTEXT.md         # Project context and overview
+│   ├── DEVELOPMENT_PLAN.md # Development roadmap
+│   └── EXERCISES_DEVELOPMENT_PLAN.md # Exercise system plan
 │
-├── scripts/                    # Build and deployment scripts
-├── .github/                    # GitHub Actions workflows
-├── .gitignore
-├── README.md
-└── package.json
+├── .env                    # Environment variables
+├── .env.example           # Example environment variables
+├── vite.config.ts         # Vite configuration
+├── tsconfig.json          # TypeScript configuration
+├── tailwind.config.js     # TailwindCSS configuration
+├── postcss.config.js      # PostCSS configuration
+├── capacitor.config.ts    # Capacitor configuration
+├── firebase.json          # Firebase configuration
+├── firestore.rules        # Firestore security rules
+└── package.json           # Project dependencies and scripts
 ```
 
-## Development Roadmap
+## Development Workflow
 
-### Phase 1: MVP Development
+### Local Development
 
-- Core chatbot implementation
-- Basic therapist booking system
-- Essential user authentication
+1. Install dependencies:
 
-### Phase 2: User Testing
+   ```bash
+   npm install
+   ```
 
-- NGO partnership program
-- User feedback collection
-- Performance optimization
+2. Set up environment variables:
 
-### Phase 3: Launch & Scale
+   - Copy `.env.example` to `.env`
+   - Update with your Firebase and API credentials
 
-- Full feature deployment
-- Multilingual support
-- Community expansion
+3. Start development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Start Firebase emulators:
+   ```bash
+   npm run functions:serve
+   ```
+
+### Building for Production
+
+1. Build the application:
+
+   ```bash
+   npm run build:prod
+   ```
+
+2. Deploy Firebase Functions:
+   ```bash
+   npm run functions:deploy
+   ```
+
+### Mobile Development
+
+1. Sync Capacitor:
+
+   ```bash
+   npm run mobile:sync
+   ```
+
+2. Open platform-specific IDE:
+   ```bash
+   npm run mobile:open:android  # For Android
+   npm run mobile:open:ios      # For iOS
+   ```
+
+### Desktop Development
+
+1. Start Electron development:
+
+   ```bash
+   npm run electron:dev
+   ```
+
+2. Build desktop application:
+   ```bash
+   npm run electron:build
+   ```
+
+## Security Considerations
+
+1. Environment Variables:
+
+   - Never commit `.env` file
+   - Use different values for development/staging/production
+   - Keep API keys secure
+
+2. Firebase Security Rules:
+
+   - Implement proper access control
+   - Validate user authentication
+   - Protect sensitive data
+
+3. API Security:
+   - Use Firebase Authentication
+   - Implement rate limiting
+   - Validate all inputs
+
+## Deployment
+
+### Firebase Deployment
+
+1. Configure Firebase project:
+
+   ```bash
+   firebase init
+   ```
+
+2. Deploy functions:
+
+   ```bash
+   npm run functions:deploy
+   ```
+
+3. Deploy hosting:
+   ```bash
+   firebase deploy --only hosting
+   ```
+
+### Mobile App Deployment
+
+1. Android:
+
+   - Build release APK
+   - Sign with release key
+   - Upload to Play Store
+
+2. iOS:
+   - Archive in Xcode
+   - Upload to App Store Connect
+
+### Desktop App Deployment
+
+1. Build platform-specific packages:
+
+   ```bash
+   npm run electron:build
+   ```
+
+2. Sign and notarize (macOS)
+3. Code sign (Windows)
 
 ---
 
