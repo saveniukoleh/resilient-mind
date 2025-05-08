@@ -108,8 +108,10 @@ const clearChat = () => {
 watch(() => aiChatStore.messages, scrollToBottom, { deep: true });
 
 onMounted(async () => {
-  // Initialize chat and ensure welcome message is shown
-  aiChatStore.initializeChat();
+  // Only initialize if there are no messages
+  if (messages.value.length === 0) {
+    aiChatStore.initializeChat();
+  }
   await nextTick();
   await scrollToBottom();
 });
@@ -123,6 +125,7 @@ onMounted(async () => {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 80px; /* Use margin instead of padding for space above bottom nav */
 }
 
 .chat-header {
@@ -155,6 +158,7 @@ onMounted(async () => {
   flex: 1;
   overflow-y: auto;
   padding: 1rem;
+  padding-bottom: 80px;
 }
 
 .message {
@@ -225,6 +229,7 @@ onMounted(async () => {
   gap: 0.5rem;
   padding: 1rem;
   border-top: 1px solid #eee;
+  margin-top: 8px; /* Extra space above input */
 }
 
 textarea {

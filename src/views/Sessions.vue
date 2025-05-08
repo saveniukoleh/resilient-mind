@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-50">
-    <TopNav title="Therapy Sessions" />
+    <TopNav title="Therapy Sessions" subtitle="Coming Soon" />
     <div class="max-w-4xl mx-auto px-4 py-8">
       <!-- Available Sessions -->
       <div class="mb-8">

@@ -21,22 +21,23 @@ export const useAIChatStore = defineStore('aiChat', () => {
   }));
 
   const initializeChat = () => {
-    // Clear existing messages
-    messages.value = [];
-    error.value = null;
-    requiresEscalation.value = false;
+    // Only initialize if there are no messages
+    if (messages.value.length === 0) {
+      error.value = null;
+      requiresEscalation.value = false;
 
-    // Initialize chat service
-    chatService.value = new AIChatService(context.value);
+      // Initialize chat service
+      chatService.value = new AIChatService(context.value);
 
-    // Add welcome message
-    const welcomeMessage: Message = {
-      role: 'assistant',
-      content:
-        "Hello! I'm your AI support assistant. I'm here to help you with general mental health information, stress management techniques, and basic emotional support. How can I assist you today?",
-      timestamp: new Date(),
-    };
-    messages.value = [welcomeMessage];
+      // Add welcome message
+      const welcomeMessage: Message = {
+        role: 'assistant',
+        content:
+          "Hello! I'm your AI support assistant. I'm here to help you with general mental health information, stress management techniques, and basic emotional support. How can I assist you today?",
+        timestamp: new Date(),
+      };
+      messages.value = [welcomeMessage];
+    }
   };
 
   const sendMessage = async (content: string) => {
