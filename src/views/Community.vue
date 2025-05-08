@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <TopNav title="Community Support" subtitle="Coming Soon" />
-    <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto px-4 py-8 mb-[60px]">
       <!-- Post Filters -->
       <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
         <div class="flex flex-wrap gap-4">
