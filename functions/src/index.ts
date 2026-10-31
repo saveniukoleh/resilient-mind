@@ -37,12 +37,22 @@ const escalationKeywords = [
   'emergency',
   'immediate help',
   'urgent',
+  'самогуб',
+  'суїцид',
+  'не хочу жити',
+  'покінчити з життям',
+  'суицид',
+  'самоубий',
+  'не хочу жить',
+  'покончить с собой',
 ];
 
 function buildSystemPrompt(input: z.infer<typeof requestSchema>): string {
-  return `You are a supportive AI assistant for a mental health platform.
-The user is a ${input.userRole ?? 'user'} who speaks ${input.language ?? 'en'}.
+  return `You are a supportive AI assistant for a mental health platform for people affected by the war in Ukraine.
+The user role is ${input.userRole ?? 'user'}.
 ${input.userProfile ? `User profile: ${JSON.stringify(input.userProfile)}` : ''}
+
+Reply in the same language as the user's latest message, whichever language that is. Earlier replies and the profile language hint ("${input.language ?? 'unknown'}") do not override it. Do not mention this rule or comment on the language. Translate only when the user explicitly asks for a translation.
 
 Guidelines:
 1. Be empathetic and supportive

@@ -2,6 +2,8 @@
 
 A mental health support application designed to provide assistance for war-affected individuals in Ukraine. Our platform combines technology and professional expertise to deliver accessible, professional mental health support to those who need it most.
 
+The public site is [saveniukoleh.com/resilient-mind](https://saveniukoleh.com/resilient-mind).
+
 ## 🌟 Features
 
 - 🤖 AI-Powered Chatbot for 24/7 emotional support
@@ -10,13 +12,16 @@ A mental health support application designed to provide assistance for war-affec
 - 👥 Community Support Forum for safe, moderated discussions
 - 📱 Offline Mode with downloadable resources and SMS support
 
+The chatbot replies in the language of the user's latest message. Its opening message stays in English.
+
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- npm (v8 or higher)
-- Firebase CLI
+- Node.js 20 or newer for the Vue app
+- Node.js 22 for Cloud Functions
+- Yarn
+- Firebase CLI (`npx firebase-tools`)
 - Git
 
 ### Installation
@@ -24,60 +29,62 @@ A mental health support application designed to provide assistance for war-affec
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/resilient-mind.git
+   git clone https://github.com/saveniukoleh/resilient-mind.git
    cd resilient-mind
    ```
 
 2. Install dependencies:
 
    ```bash
-   npm install
+   yarn install
    ```
 
-3. Set up environment variables:
+3. Create a local env file:
 
    ```bash
    cp .env.example .env
    ```
 
-   Edit `.env` with your configuration values.
+   Put the Firebase web config in `.env`. Do not put an OpenAI key there. `VITE_` variables are copied into the public JavaScript bundle.
 
-4. Initialize Firebase:
+4. Install function dependencies:
+
    ```bash
-   firebase init
+   cd functions
+   npm install
    ```
 
 ### Development
 
-1. Start the development server:
+Start the app at [http://localhost:3000](http://localhost:3000):
 
-   ```bash
-   npm run dev
-   ```
+```bash
+yarn dev
+```
 
-2. Start Firebase emulators:
-   ```bash
-   npm run functions:serve
-   ```
+The production build uses the `/resilient-mind/` base path. The dev server stays at `/`.
 
-### Building
+### Chatbot
 
-1. Build for production:
+The browser calls the Firebase function `handleAIChat`. The OpenAI key lives only in Firebase Secret Manager.
 
-   ```bash
-   npm run build:prod
-   ```
+From `functions`, sign in, store a new key, and deploy. Cloud Functions require the Blaze plan, and the function runtime is Node.js 22.
 
-2. Deploy Firebase Functions:
+```bash
+npx firebase-tools login
+npx firebase-tools functions:secrets:set OPENAI_API_KEY --project resilient-mind-cca45
+npx firebase-tools deploy --only functions:handleAIChat --project resilient-mind-cca45
+```
 
-   ```bash
-   npm run functions:deploy
-   ```
+The function runs as `resilient-mind-cca45@appspot.gserviceaccount.com` because this project has no default Compute Engine service account.
 
-3. Deploy to Firebase Hosting:
-   ```bash
-   firebase deploy --only hosting
-   ```
+Add `saveniukoleh.com` and `localhost` under Firebase **Authentication → Settings → Authorized domains** so sign-in works on the public site and locally.
+
+### Hosting
+
+Pushes to `master` build the app and deploy it with GitHub Actions to GitHub Pages. In the repository, **Settings → Pages → Source** must be **GitHub Actions**.
+
+The Pages site is served at [saveniukoleh.com/resilient-mind](https://saveniukoleh.com/resilient-mind). Firebase client config used by that build is in `.env.production`.
 
 ## 🏗️ Project Structure
 
@@ -96,9 +103,7 @@ resilient-mind/
 │   └── main.ts     # Application entry point
 │
 ├── functions/              # Firebase Cloud Functions
-│   ├── src/              # Functions source code
-│   │   ├── functions/   # Function implementations
-│   │   └── index.ts    # Functions entry point
+│   ├── src/index.ts      # handleAIChat, the deployed function
 │   ├── package.json    # Functions dependencies
 │   └── tsconfig.json  # TypeScript configuration
 │
@@ -115,7 +120,7 @@ resilient-mind/
 - **Database**: Firebase Firestore
 - **Authentication**: Firebase Authentication
 - **Storage**: Firebase Storage
-- **Hosting**: Firebase Hosting
+- **Hosting**: GitHub Pages
 
 ## 📚 Documentation
 
@@ -125,11 +130,9 @@ resilient-mind/
 
 ## 🔒 Security
 
-- Environment variables are used for sensitive data
-- Firebase Security Rules protect data access
-- API rate limiting is implemented
-- Input validation is enforced
-- Regular security audits are performed
+- The OpenAI key is a Firebase secret. Never commit it or expose it as a `VITE_` variable. GitHub secret scanning revokes keys that land in this public repository.
+- Firebase web config in `.env.production` is public by design. Firestore and Storage rules control access.
+- The chatbot function accepts calls only from a signed-in user.
 
 ## 🤝 Contributing
 
