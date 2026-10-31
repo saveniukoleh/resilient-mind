@@ -56,6 +56,7 @@ export const useAIChatStore = defineStore('aiChat', () => {
         timestamp: new Date(),
       };
       messages.value = [...messages.value, userMessage];
+      chatService.value!.updateContext(context.value);
 
       // Get AI response
       const response = await chatService.value!.sendMessage(content);
